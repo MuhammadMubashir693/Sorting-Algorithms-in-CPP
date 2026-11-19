@@ -114,7 +114,7 @@ void merge(vector<int> &arr, vector<int> &left, vector<int> &right)
 {
     int leftsize = left.size();
     int rightsize = right.size();
-    
+
     cout << "  Merging left: ";
     printarray(left);
     cout << "  with right: ";
@@ -185,7 +185,7 @@ void mergesort(vector<int> &arr)
     {
         right.at(j - mid) = arr.at(j);
     }
-    
+
     cout << " Left: ";
     printarray(left);
     cout << " Right: ";
@@ -197,21 +197,126 @@ void mergesort(vector<int> &arr)
     merge(arr, left, right);
 }
 
+int partition(vector<int> &arr, int low, int high)
+{
+    int pivot = arr.at(high);
+    int i = low;
+
+    cout << "Partitioning positions " << low << " to " << high
+         << " with pivot " << pivot << "\n";
+
+    for (int j = low; j < high; j++)
+    {
+        cout << "  Comparing " << arr.at(j) << " with pivot " << pivot << "\n";
+
+        if (arr.at(j) <= pivot)
+        {
+            if (i != j)
+            {
+                cout << "  Swapping " << arr.at(i) << " and " << arr.at(j) << "\n";
+                swap(arr.at(i), arr.at(j));
+            }
+            i++;
+        }
+    }
+
+    if (i != high)
+    {
+        cout << "  Swapping pivot " << arr.at(high) << " with " << arr.at(i) << "\n";
+        swap(arr.at(i), arr.at(high));
+    }
+    else
+    {
+        cout << "  Pivot is already in the correct position\n";
+    }
+
+    cout << "  After partition: ";
+    printarray(arr);
+
+    return i;
+}
+
+void quicksort(vector<int> &arr, int low, int high)
+{
+    if (low >= high)
+    {
+        return;
+    }
+
+    int pivotIndex = partition(arr, low, high);
+
+    quicksort(arr, low, pivotIndex - 1);
+    quicksort(arr, pivotIndex + 1, high);
+}
+
+void quicksort(vector<int> &arr)
+{
+    if (arr.size() > 1)
+    {
+        quicksort(arr, 0, arr.size() - 1);
+    }
+}
+
 int main()
 {
     srand(time(nullptr));
 
-    vector<int> arr(10);
+    int size = 0;
+    while (size < 1)
+    {
+        cout << "Enter array size (positive): ";
+        cin >> size;
+    }
+
+    vector<int> arr(size);
+
+    cout << "Enter range for random numbers: ";
+    int min;
+    cin >> min;
+    int max;
+    cin >> max;
 
     for (auto &elem : arr)
     {
-        elem = rand() % 100 + 1;
+        elem = rand() % (max - min + 1) + min;
     }
 
     cout << "Unsorted array: ";
     printarray(arr);
-    cout << "Mergesort steps:\n";
-    mergesort(arr);
+
+    int choice = 0;
+    while (choice < 1 || choice > 5)
+    {
+        cout << "Select a sorting algorithm:\n1.Bubble Sort\n2.Selection Sort\n3.Insertion Sort\n4. Merge Sort\n5. Quicksort\nEnter your choice: ";
+        cin >> choice;
+    }
+
+    switch (choice)
+    {
+    case 1:
+        bubblesort(arr);
+        break;
+
+    case 2:
+        selectionsort(arr);
+        break;
+
+    case 3:
+        insertionsort(arr);
+        break;
+
+    case 4:
+        mergesort(arr);
+        break;
+
+    case 5:
+        quicksort(arr);
+        break;
+
+    default:
+        break;
+    }
+
     cout << "Sorted array: ";
     printarray(arr);
 }
